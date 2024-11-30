@@ -9,27 +9,19 @@
 <body>
     <div class="container">
         <h1>Dados do Paciente</h1>
-        <p><strong>Nome:</strong> <span id="patientName"></span></p>
-        <p><strong>Idade:</strong> <span id="patientAge"></span></p>
-        <p><strong>Data:</strong> <span id="patientDate"></span></p>
 
-        <button onclick="toggleSection('metabolism')">Metabolismo</button>
-        <div id="metabolism" class="toggle-section">
-            <p><strong>TMB:</strong> <span id="tmb"></span> kcal</p>
-            <p><strong>Peso:</strong> <span id="patientWeight"></span> kg</p>
-            <p><strong>Altura:</strong> <span id="patientHeight"></span> m</p>
-            <p><strong>Meta de Peso:</strong> <span id="goalWeight"></span> kg</p>
-            <p><strong>IMC:</strong> <span id="bmi"></span></p>
-        </div>
+        <!-- Nome Completo -->
+        <p><strong>Nome Completo:</strong> <span id="displayFullName"></span></p>
 
-        <button onclick="toggleSection('menu')">Cardápio</button>
-        <div id="menu" class="toggle-section">
-            <button onclick="showDayMenu('monday')">Segunda-feira</button>
-            <button onclick="showDayMenu('tuesday')">Terça-feira</button>
-            <!-- Adicione mais botões conforme necessário -->
-            <div id="dayMenuDisplay"></div>
-        </div>
+        <!-- Dados Metabólicos -->
+        <h2>Dados Metabólicos</h2>
+        <p id="displayMetabolicData"></p>
+
+        <!-- Cardápio -->
+        <h2>Cardápio</h2>
+        <p id="displayMenuData"></p>
     </div>
+
     <script src="js/script.js"></script>
 </body>
 </html>
