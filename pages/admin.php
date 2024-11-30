@@ -1,58 +1,90 @@
 <?php
-// Simulação de conexão ao banco de dados
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "nutrifit_pro";
+require_once '../includes/header.php'; // Inclui o cabeçalho com o logo e o estilo
 
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-if ($conn->connect_error) {
-    die("Conexão falhou: " . $conn->connect_error);
-}
-
-// Lógica de inserção de paciente e cardápio
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['add_patient'])) {
-        $name = $_POST['name'];
-        $age = $_POST['age'];
-        $metabolism = $_POST['metabolism'];
-
-        $sql = "INSERT INTO patients (name, age, metabolism) VALUES ('$name', '$age', '$metabolism')";
-        $conn->query($sql);
-    }
-}
+// Verificar conexão com o banco de dados
+$conn = getDbConnection();
 ?>
 
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Administração - NutriFit Pro</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
 <div class="container mt-4">
-    <img src="logo-mk.png" alt="Logo MK" class="img-fluid mx-auto d-block" style="max-width: 150px;">
-    <h1 class="text-center">NutriFit Pro</h1>
+    <h2 class="text-center">Painel de Administração</h2>
+    <p class="text-center">Gerencie pacientes e cardápios abaixo:</p>
 
-    <form method="POST" class="mt-4">
+    <!-- Formulário para cadastro de pacientes -->
+    <form method="POST" action="admin.php" class="mt-4">
         <h3>Cadastro de Pacientes</h3>
         <div class="mb-3">
             <label for="name" class="form-label">Nome do Paciente</label>
-            <input type="text" class="form-control" id="name" name="name" required>
+            <input type="text" class="form-control" id="name" name="name" placeholder="Digite o nome do paciente" required>
         </div>
         <div class="mb-3">
             <label for="age" class="form-label">Idade</label>
-            <input type="number" class="form-control" id="age" name="age" required>
+            <input type="number" class="form-control" id="age" name="age" placeholder="Digite a idade do paciente" required>
         </div>
         <div class="mb-3">
             <label for="metabolism" class="form-label">Metabolismo</label>
-            <input type="text" class="form-control" id="metabolism" name="metabolism">
+            <input type="text" class="form-control" id="metabolism" name="metabolism" placeholder="Digite informações de metabolismo">
         </div>
-        <button type="submit" class="btn btn-primary w-100" name="add_patient">Cadastrar</button>
+        <button type="submit" class="btn btn-primary w-100" name="add_patient">Cadastrar Paciente</button>
     </form>
+
+    <!-- Tabela de pacientes cadastrados -->
+    <div class="mt-5">
+        <h3 class="text-center">Pacientes Cadastrados</h3>
+        <table class="table table-bordered mt-3">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Idade</th>
+                    <th>Metabolismo</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                // Buscar pacientes no banco de dados
+                $result = $conn->query("SELECT * FROM patients");
+
+                if ($result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                        echo "<tr>
+                                <td>{$row['id']}</td>
+                                <td>{$row['name']}</td>
+                                <td>{$row['age']}</td>
+                                <td>{$row['metabolism']}</td>
+                                <td>
+                                    <a href='menu.php?id={$row['id']}' class='btn btn-success btn-sm'>Ver Cardápio</a>
+                                    <a href='delete.php?id={$row['id']}' class='btn btn-danger btn-sm'>Excluir</a>
+                                </td>
+                              </tr>";
+                    }
+                } else {
+                    echo "<tr><td colspan='5' class='text-center'>Nenhum paciente cadastrado.</td></tr>";
+                }
+                ?>
+            </tbody>
+        </table>
+    </div>
 </div>
-</body>
-</html>
+
+<?php
+require_once '../includes/footer.php'; // Inclui o rodapé
+?>
+
+<?php
+// Lógica para adicionar pacientes ao banco de dados
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_patient'])) {
+    $name = $_POST['name'];
+    $age = $_POST['age'];
+    $metabolism = $_POST['metabolism'];
+
+    $stmt = $conn->prepare("INSERT INTO patients (name, age, metabolism) VALUES (?, ?, ?)");
+    $stmt->bind_param("sis", $name, $age, $metabolism);
+
+    if ($stmt->execute()) {
+        echo "<script>alert('Paciente cadastrado com sucesso!'); window.location.href='admin.php';</script>";
+    } else {
+        echo "<script>alert('Erro ao cadastrar paciente.');</script>";
+    }
+}
+?>
