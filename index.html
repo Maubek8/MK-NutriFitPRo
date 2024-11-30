@@ -9,31 +9,25 @@
 <body>
     <div class="container">
         <h1>Cadastro do Paciente</h1>
+
         <form id="patientForm">
-            <label for="name">Nome do Paciente:</label>
-            <input type="text" id="name" required>
+            <!-- Nome Completo -->
+            <label for="fullName">Nome Completo:</label>
+            <input type="text" id="fullName" placeholder="Digite o nome completo" required>
 
-            <label for="age">Idade:</label>
-            <input type="number" id="age" required>
+            <!-- Dados Metabólicos -->
+            <label for="metabolicData">Dados Metabólicos:</label>
+            <textarea id="metabolicData" placeholder="Cole aqui os dados metabólicos do paciente..." required></textarea>
 
-            <label for="date">Data:</label>
-            <input type="date" id="date" required>
+            <!-- Cardápio -->
+            <label for="menuData">Cardápio:</label>
+            <textarea id="menuData" placeholder="Cole aqui o cardápio completo..." required></textarea>
 
-            <label for="height">Altura (m):</label>
-            <input type="number" id="height" step="0.01" required>
-
-            <label for="weight">Peso (kg):</label>
-            <input type="number" id="weight" step="0.1" required>
-
-            <label for="goalWeight">Meta de Peso (kg):</label>
-            <input type="number" id="goalWeight" step="0.1">
-
-            <label for="menu">Cardápio:</label>
-            <textarea id="menu" placeholder="Insira o cardápio completo aqui..." required></textarea>
-
+            <!-- Botão Enviar -->
             <button type="button" onclick="submitForm()">Enviar</button>
         </form>
     </div>
+
     <script src="js/script.js"></script>
 </body>
 </html>
