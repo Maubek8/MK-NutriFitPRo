@@ -1,27 +1,24 @@
 <?php
-// Configurações do Banco de Dados
-define('DB_HOST', 'localhost');       // Endereço do servidor do banco de dados
-define('DB_USER', 'root');           // Usuário do banco de dados
-define('DB_PASS', '');               // Senha do banco de dados
-define('DB_NAME', 'nutrifit_pro');   // Nome do banco de dados
+// Configuração do Banco de Dados
+define('DB_HOST', 'localhost'); // Substitua pelo host do seu banco de dados
+define('DB_USER', 'root');      // Usuário do banco de dados
+define('DB_PASS', '');          // Senha do banco de dados
+define('DB_NAME', 'nutrifit');  // Nome do banco de dados
 
-// Caminhos base
-define('BASE_URL', 'http://localhost/nutrifit_pro/'); // URL base do sistema
-define('ASSETS_URL', BASE_URL . 'assets/');          // URL para os arquivos estáticos
+// URL para ativos
+define('ASSETS_URL', '/assets/');
 
-// Configurações do sistema
-define('SYSTEM_NAME', 'NutriFit Pro'); // Nome do sistema
+// Nome do sistema
+define('SYSTEM_NAME', 'NutriFit Pro');
 
-// Função de conexão ao banco de dados
+// Função para conectar ao banco de dados
 function getDbConnection() {
     $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-    
+
     if ($conn->connect_error) {
         die('Erro na conexão com o banco de dados: ' . $conn->connect_error);
     }
-    
+
     return $conn;
 }
-
-// Configuração de fuso horário
-date_default_timezone_set('America/Sao_Paulo');
+?>
