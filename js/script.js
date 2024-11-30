@@ -1,41 +1,33 @@
 function submitForm() {
-    const name = document.getElementById("name").value;
-    const age = document.getElementById("age").value;
-    const date = document.getElementById("date").value;
-    const height = parseFloat(document.getElementById("height").value);
-    const weight = parseFloat(document.getElementById("weight").value);
-    const goalWeight = parseFloat(document.getElementById("goalWeight").value);
-    const menu = document.getElementById("menu").value;
+    // Captura os valores inseridos
+    const fullName = document.getElementById("fullName").value;
+    const metabolicData = document.getElementById("metabolicData").value;
+    const menuData = document.getElementById("menuData").value;
 
-    const bmi = (weight / (height * height)).toFixed(2);
-    const tmb = Math.round(10 * weight + 6.25 * (height * 100) - 5 * age + 5); // Fórmula de Harris-Benedict
+    // Validação simples
+    if (!fullName || !metabolicData || !menuData) {
+        alert("Por favor, preencha todos os campos.");
+        return;
+    }
 
-    const patientData = {
-        name, age, date, height, weight, goalWeight, menu, bmi, tmb
-    };
-
+    // Armazena os dados no LocalStorage
+    const patientData = { fullName, metabolicData, menuData };
     localStorage.setItem("patientData", JSON.stringify(patientData));
-    window.location.href = "paciente.html";
+
+    // Redireciona para a página do paciente
+    window.location.href = "./paciente.html"; // Use "./" para indicar o mesmo diretório
 }
 
 function loadPatientData() {
+    // Recupera os dados do LocalStorage
     const patientData = JSON.parse(localStorage.getItem("patientData"));
-    if (!patientData) return;
+    if (!patientData) {
+        alert("Nenhum dado encontrado.");
+        return;
+    }
 
-    document.getElementById("patientName").textContent = patientData.name;
-    document.getElementById("patientAge").textContent = patientData.age;
-    document.getElementById("patientDate").textContent = patientData.date;
-    document.getElementById("patientWeight").textContent = patientData.weight;
-    document.getElementById("patientHeight").textContent = patientData.height;
-    document.getElementById("goalWeight").textContent = patientData.goalWeight;
-    document.getElementById("bmi").textContent = patientData.bmi;
-    document.getElementById("tmb").textContent = patientData.tmb;
-
-    const menuDisplay = document.getElementById("dayMenuDisplay");
-    menuDisplay.textContent = patientData.menu;
-}
-
-function toggleSection(sectionId) {
-    const section = document.getElementById(sectionId);
-    section.style.display = section.style.display === "block" ? "none" : "block";
+    // Exibe os dados na página `paciente.html`
+    document.getElementById("displayFullName").textContent = patientData.fullName;
+    document.getElementById("displayMetabolicData").textContent = patientData.metabolicData.replace(/\n/g, "<br>");
+    document.getElementById("displayMenuData").textContent = patientData.menuData.replace(/\n/g, "<br>");
 }
