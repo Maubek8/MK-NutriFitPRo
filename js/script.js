@@ -1,8 +1,8 @@
 function submitForm() {
     // Captura os valores inseridos
-    const fullName = document.getElementById("fullName").value;
-    const metabolicData = document.getElementById("metabolicData").value;
-    const menuData = document.getElementById("menuData").value;
+    const fullName = document.getElementById("fullName").value.trim();
+    const metabolicData = document.getElementById("metabolicData").value.trim();
+    const menuData = document.getElementById("menuData").value.trim();
 
     // Validação simples
     if (!fullName || !metabolicData || !menuData) {
@@ -15,7 +15,7 @@ function submitForm() {
     localStorage.setItem("patientData", JSON.stringify(patientData));
 
     // Redireciona para a página do paciente
-    window.location.href = "./paciente.html"; // Use "./" para indicar o mesmo diretório
+    window.location.href = "./paciente.html";
 }
 
 function loadPatientData() {
@@ -28,6 +28,6 @@ function loadPatientData() {
 
     // Exibe os dados na página `paciente.html`
     document.getElementById("displayFullName").textContent = patientData.fullName;
-    document.getElementById("displayMetabolicData").textContent = patientData.metabolicData.replace(/\n/g, "<br>");
-    document.getElementById("displayMenuData").textContent = patientData.menuData.replace(/\n/g, "<br>");
+    document.getElementById("displayMetabolicData").textContent = patientData.metabolicData;
+    document.getElementById("displayMenuData").textContent = patientData.menuData;
 }
