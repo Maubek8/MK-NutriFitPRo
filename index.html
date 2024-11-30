@@ -3,19 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NutriFit Pro</title>
-    <link rel="stylesheet" href="assets/css/style.css">
-    <script src="assets/js/scripts.js" defer></script>
+    <title>Cadastro do Paciente</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <div class="container">
-        <img src="assets/img/logo.jpg" alt="Logo MK" class="logo">
-        <h1 class="text-center">Bem-vindo ao NutriFit Pro</h1>
-        <p class="text-center">Gerencie pacientes e cardápios de forma eficiente.</p>
-        <div class="text-center mt-4">
-            <a href="pages/admin.php" class="btn btn-primary">Painel de Administração</a>
-            <a href="pages/menu.php" class="btn btn-success">Cardápios</a>
-        </div>
+        <h1>Cadastro do Paciente</h1>
+        <form id="patientForm">
+            <label for="name">Nome do Paciente:</label>
+            <input type="text" id="name" required>
+
+            <label for="age">Idade:</label>
+            <input type="number" id="age" required>
+
+            <label for="date">Data:</label>
+            <input type="date" id="date" required>
+
+            <label for="height">Altura (m):</label>
+            <input type="number" id="height" step="0.01" required>
+
+            <label for="weight">Peso (kg):</label>
+            <input type="number" id="weight" step="0.1" required>
+
+            <label for="goalWeight">Meta de Peso (kg):</label>
+            <input type="number" id="goalWeight" step="0.1">
+
+            <label for="menu">Cardápio:</label>
+            <textarea id="menu" placeholder="Insira o cardápio completo aqui..." required></textarea>
+
+            <button type="button" onclick="submitForm()">Enviar</button>
+        </form>
     </div>
+    <script src="js/script.js"></script>
 </body>
 </html>
