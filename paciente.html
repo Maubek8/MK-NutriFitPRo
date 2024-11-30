@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dados do Paciente</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Dados do Paciente</h1>
+        <p><strong>Nome:</strong> <span id="patientName"></span></p>
+        <p><strong>Idade:</strong> <span id="patientAge"></span></p>
+        <p><strong>Data:</strong> <span id="patientDate"></span></p>
+
+        <button onclick="toggleSection('metabolism')">Metabolismo</button>
+        <div id="metabolism" class="toggle-section">
+            <p><strong>TMB:</strong> <span id="tmb"></span> kcal</p>
+            <p><strong>Peso:</strong> <span id="patientWeight"></span> kg</p>
+            <p><strong>Altura:</strong> <span id="patientHeight"></span> m</p>
+            <p><strong>Meta de Peso:</strong> <span id="goalWeight"></span> kg</p>
+            <p><strong>IMC:</strong> <span id="bmi"></span></p>
+        </div>
+
+        <button onclick="toggleSection('menu')">Cardápio</button>
+        <div id="menu" class="toggle-section">
+            <button onclick="showDayMenu('monday')">Segunda-feira</button>
+            <button onclick="showDayMenu('tuesday')">Terça-feira</button>
+            <!-- Adicione mais botões conforme necessário -->
+            <div id="dayMenuDisplay"></div>
+        </div>
+    </div>
+    <script src="js/script.js"></script>
+</body>
+</html>
