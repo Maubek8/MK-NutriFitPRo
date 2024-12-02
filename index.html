@@ -1,34 +1,205 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro do Paciente</title>
-    <link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MK-NutriFit</title>
+  <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f5f6fa;
+    }
+
+    .header {
+      text-align: center;
+      background: #000080;
+      color: #FFD700;
+      padding: 20px;
+    }
+
+    .header img {
+      width: 100px;
+      height: auto;
+      margin-bottom: 10px;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 20px auto;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .btn {
+      background: #000080;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      background: #FFD700;
+      color: #000080;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Cadastro do Paciente</h1>
-
-        <form id="patientForm">
-            <!-- Nome Completo -->
-            <label for="fullName">Nome Completo:</label>
-            <input type="text" id="fullName" placeholder="Digite o nome completo" required>
-
-            <!-- Dados Metabólicos -->
-            <label for="metabolicData">Dados Metabólicos:</label>
-            <textarea id="metabolicData" placeholder="Cole aqui os dados metabólicos do paciente..." required></textarea>
-
-            <!-- Cardápio -->
-            <label for="menuData">Cardápio:</label>
-            <textarea id="menuData" placeholder="Cole aqui o cardápio completo..." required></textarea>
-
-            <!-- Botão Enviar -->
-            <button type="button" onclick="submitForm()">Enviar</button>
-        </form>
+  <header class="header">
+    <img src="logo.png" alt="Logo MK-NutriFit">
+    <h1>MK-NutriFit</h1>
+    <p>Gerencie dados de pacientes de forma simples e eficiente!</p>
+  </header>
+  <div class="container">
+    <div class="form-group">
+      <label for="patient-name">Nome do Paciente:</label>
+      <input type="text" id="patient-name" placeholder="Digite o nome do paciente">
     </div>
+    <div class="form-group">
+      <label for="patient-date">Data:</label>
+      <input type="date" id="patient-date">
+    </div>
+    <button id="savePatientBtn" class="btn">Salvar Dados</button>
+  </div>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+    import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
 
-    <script src="js/script.js"></script>
+    // Configuração do Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyBA95GvqOvSOXbuLnllowi14ghPu0RNSJg",
+      authDomain: "mk-nutrifit.firebaseapp.com",
+      projectId: "mk-nutrifit",
+      storageBucket: "mk-nutrifit.firebaseapp.com",
+      messagingSenderId: "596494427405",
+      appId: "1:596494427405:web:de194c97f24cd9d51e3c44",
+      measurementId: "G-HG6TGC3064"
+    };
+
+    // Inicializar Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+  </script>
+  <script type="module">
+    async function savePatientData() {
+      const patientName = document.getElementById("patient-name").value.trim();
+      const patientDate = document.getElementById("patient-date").value;
+
+      if (!patientName || !patientDate) {
+        alert("Por favor, preencha todos os campos!");
+        return;
+      }
+
+      try {
+        // Salvar dados no Firestore
+        await setDoc(doc(db, "patients", patientName), {
+          name: patientName,
+          date: patientDate,
+        });
+
+        // Criar a página do paciente
+        const newWindow = window.open("", "_blank");
+        newWindow.document.write(`
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>${patientName} - Dados</title>
+            <style>
+              body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 20px;
+                background: #f5f6fa;
+                text-align: center;
+              }
+              .header {
+                background: #000080;
+                color: #FFD700;
+                padding: 20px;
+                margin-bottom: 20px;
+              }
+              .header img {
+                width: 100px;
+                height: auto;
+              }
+              .container {
+                background: white;
+                padding: 20px;
+                border-radius: 8px;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                text-align: left;
+                margin: auto;
+                max-width: 600px;
+              }
+            </style>
+          </head>
+          <body>
+            <header class="header">
+              <img src="logo.png" alt="Logo MK-NutriFit">
+              <h1>MK-NutriFit</h1>
+            </header>
+            <div class="container">
+              <h2>Dados do Paciente</h2>
+              <p><strong>Nome:</strong> ${patientName}</p>
+              <p><strong>Data:</strong> ${patientDate}</p>
+            </div>
+          </body>
+          </html>
+        `);
+        newWindow.document.close();
+
+        alert("Dados salvos com sucesso e página do paciente criada!");
+      } catch (error) {
+        console.error("Erro ao salvar os dados:", error);
+        alert("Erro ao salvar os dados.");
+      }
+    }
+
+    document.getElementById("savePatientBtn").addEventListener("click", savePatientData);
+  </script>
+  <script type="module">
+    import { getDoc } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
+
+    async function getPatientData(patientName) {
+      try {
+        const docRef = doc(db, "patients", patientName);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          console.log("Dados do paciente:", docSnap.data());
+          alert("Dados encontrados: " + JSON.stringify(docSnap.data()));
+        } else {
+          alert("Paciente não encontrado!");
+        }
+      } catch (error) {
+        console.error("Erro ao buscar os dados:", error);
+      }
+    }
+  </script>
 </body>
 </html>
-
