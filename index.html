@@ -5,163 +5,226 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MK-NutriFit</title>
   <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
-    import { getFirestore, doc, setDoc, getDoc, getDocs, collection } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
-
-    // Configuração do Firebase
-    const firebaseConfig = {
-      apiKey: "SUA_CHAVE_DE_API",
-      authDomain: "mk-nutrifit.firebaseapp.com",
-      projectId: "mk-nutrifit",
-      storageBucket: "mk-nutrifit.appspot.com",
-      messagingSenderId: "596494427405",
-      appId: "1:596494427405:web:de194c97f24cd9d51e3c44",
-      measurementId: "G-HG6TGC3064",
-    };
-
-    // Inicializar Firebase e Firestore
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-  </script>
   <style>
-    /* Insira aqui o CSS original do seu layout */
+    :root {
+      --primary-color: #000080;
+      --secondary-color: #FFD700;
+      --text-light: #FFFFFF;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f5f6fa;
+    }
+
+    .header {
+      text-align: center;
+      background: var(--primary-color);
+      color: var(--secondary-color);
+      padding: 20px;
+    }
+
+    .header img {
+      width: 100px;
+      height: auto;
+      margin-bottom: 10px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 20px auto;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .accordion {
+      margin-top: 20px;
+    }
+
+    .accordion-button {
+      width: 100%;
+      padding: 15px;
+      background: var(--primary-color);
+      color: var(--text-light);
+      border: none;
+      border-radius: 4px;
+      text-align: left;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .accordion-content {
+      display: none;
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      margin-top: 5px;
+      background: white;
+    }
+
+    .accordion-button.active + .accordion-content {
+      display: block;
+    }
+
+    .btn {
+      display: block;
+      margin: 15px 0;
+      padding: 10px;
+      background: var(--primary-color);
+      color: var(--text-light);
+      border: none;
+      border-radius: 4px;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      background: var(--secondary-color);
+      color: var(--primary-color);
+    }
   </style>
 </head>
 <body>
-  <!-- Layout da Página -->
+  <header class="header">
+    <img src="logo.png" alt="Logo MK-NutriFit">
+    <h1>MK-NutriFit</h1>
+    <p>Gerencie dados de pacientes de forma simples e eficiente!</p>
+  </header>
+  <div class="container">
+    <div class="form-group">
+      <label for="patient-name">Nome do Paciente:</label>
+      <input type="text" id="patient-name" placeholder="Digite o nome do paciente">
+    </div>
+    <div class="form-group">
+      <label for="patient-date">Data:</label>
+      <input type="date" id="patient-date">
+    </div>
+    <!-- Botões com Accordion -->
+    <div class="accordion">
+      <button class="accordion-button">Refeições</button>
+      <div class="accordion-content">
+        <textarea class="meal-textarea" data-field="refeicoes" placeholder="Cole aqui as informações de refeições..."></textarea>
+        <button class="btn save-btn" data-section="refeicoes">Salvar Refeições</button>
+      </div>
+    </div>
+
+    <div class="accordion">
+      <button class="accordion-button">Alternativas</button>
+      <div class="accordion-content">
+        <textarea class="meal-textarea" data-field="alternativas" placeholder="Cole aqui as alternativas..."></textarea>
+        <button class="btn save-btn" data-section="alternativas">Salvar Alternativas</button>
+      </div>
+    </div>
+
+    <div class="accordion">
+      <button class="accordion-button">Metabolismo</button>
+      <div class="accordion-content">
+        <textarea class="meal-textarea" data-field="metabolismo" placeholder="Cole aqui as informações do metabolismo..."></textarea>
+        <button class="btn save-btn" data-section="metabolismo">Salvar Metabolismo</button>
+      </div>
+    </div>
+
+    <div class="accordion">
+      <button class="accordion-button">Exercícios</button>
+      <div class="accordion-content">
+        <textarea class="meal-textarea" data-field="exercicios" placeholder="Cole aqui o programa de exercícios..."></textarea>
+        <button class="btn save-btn" data-section="exercicios">Salvar Exercícios</button>
+      </div>
+    </div>
+
+    <button id="createPatientPageBtn" class="btn">Criar Página do Paciente</button>
+  </div>
 <script type="module">
-  const saveDataToFirestore = async (patientName, patientData) => {
-    try {
-      await setDoc(doc(db, "patients", patientName), patientData);
-      console.log("Dados salvos com sucesso no Firebase!");
-    } catch (error) {
-      console.error("Erro ao salvar dados no Firestore:", error);
-    }
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+  import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "SUA_CHAVE_DE_API",
+    authDomain: "mk-nutrifit.firebaseapp.com",
+    projectId: "mk-nutrifit",
+    storageBucket: "mk-nutrifit.appspot.com",
+    messagingSenderId: "596494427405",
+    appId: "1:596494427405:web:de194c97f24cd9d51e3c44",
   };
 
-  const getDataFromFirestore = async (patientName) => {
-    try {
-      const docRef = doc(db, "patients", patientName);
-      const docSnap = await getDoc(docRef);
-
-      if (docSnap.exists()) {
-        return docSnap.data();
-      } else {
-        console.warn("Paciente não encontrado!");
-        return null;
-      }
-    } catch (error) {
-      console.error("Erro ao buscar dados no Firestore:", error);
-    }
-  };
-
-  const getAllPatientsFromFirestore = async () => {
-    try {
-      const querySnapshot = await getDocs(collection(db, "patients"));
-      const patients = [];
-      querySnapshot.forEach((doc) => {
-        patients.push({ id: doc.id, ...doc.data() });
-      });
-      return patients;
-    } catch (error) {
-      console.error("Erro ao buscar pacientes:", error);
-    }
-  };
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
 </script>
 <script type="module">
-  // Salvar dados do paciente ao clicar no botão "Salvar"
+  document.querySelectorAll(".accordion-button").forEach((button) => {
+    button.addEventListener("click", () => {
+      const content = button.nextElementSibling;
+      button.classList.toggle("active");
+      content.style.display = content.style.display === "block" ? "none" : "block";
+    });
+  });
+
   document.querySelectorAll(".save-btn").forEach((button) => {
     button.addEventListener("click", async () => {
       const patientName = document.getElementById("patient-name").value.trim();
       const patientDate = document.getElementById("patient-date").value;
-      const section = button.closest(".accordion-content");
-      const inputs = section.querySelectorAll(".meal-textarea");
+      const section = button.dataset.section;
+      const value = document.querySelector(`[data-field="${section}"]`).value;
 
-      if (!patientName || !patientDate) {
-        alert("Por favor, preencha o nome e a data do paciente!");
+      if (!patientName || !patientDate || !value) {
+        alert("Preencha todos os campos!");
         return;
       }
 
-      const patientData = await getDataFromFirestore(patientName) || { name: patientName, date: patientDate, meals: {} };
-      inputs.forEach((input) => {
-        if (input.dataset.field) {
-          patientData[input.dataset.field] = input.value;
-        }
-      });
+      const docRef = doc(db, "patients", patientName);
+      const docSnap = await getDoc(docRef);
+      const patientData = docSnap.exists() ? docSnap.data() : { name: patientName, date: patientDate };
 
-      await saveDataToFirestore(patientName, patientData);
-      alert("Dados salvos com sucesso!");
+      patientData[section] = value;
+      await setDoc(docRef, patientData);
+
+      alert(`${section} salvo com sucesso!`);
     });
   });
-
-  // Criar página do paciente
+</script>
+<script type="module">
   document.getElementById("createPatientPageBtn").addEventListener("click", async () => {
     const patientName = document.getElementById("patient-name").value.trim();
-    const patientData = await getDataFromFirestore(patientName);
+    const docSnap = await getDoc(doc(db, "patients", patientName));
 
-    if (!patientData) {
+    if (!docSnap.exists()) {
       alert("Paciente não encontrado!");
       return;
     }
 
-    const newWindow = window.open("", "_blank");
-    newWindow.document.write(`
-      <html>
+    const patientData = docSnap.data();
+    const pageContent = `
+      <!DOCTYPE html>
+      <html lang="pt-BR">
       <head>
+        <meta charset="UTF-8">
         <title>${patientData.name} - Dados</title>
         <style>
-          body {
-            font-family: Arial, sans-serif;
-            background: #f5f6fa;
-            text-align: center;
-            padding: 20px;
-          }
-          .header {
-            background: #000080;
-            color: #FFD700;
-            padding: 20px;
-          }
-          .container {
-            background: white;
-            border-radius: 8px;
-            padding: 20px;
-            margin: 20px auto;
-            max-width: 600px;
-          }
+          body { font-family: Arial; margin: 20px; background: #f5f6fa; }
+          h1 { color: #000080; }
         </style>
       </head>
       <body>
-        <header class="header">
-          <h1>${patientData.name}</h1>
-        </header>
-        <div class="container">
-          <p><strong>Data:</strong> ${patientData.date}</p>
-          <p><strong>Metabolismo:</strong> ${patientData.metabolismo || "Não especificado"}</p>
-          <p><strong>Exercícios:</strong> ${patientData.exercicios || "Não especificado"}</p>
-        </div>
+        <h1>${patientData.name}</h1>
+        <p>Data: ${patientData.date}</p>
+        <p>Refeições: ${patientData.refeicoes || "Não especificado"}</p>
+        <p>Alternativas: ${patientData.alternativas || "Não especificado"}</p>
+        <p>Metabolismo: ${patientData.metabolismo || "Não especificado"}</p>
+        <p>Exercícios: ${patientData.exercicios || "Não especificado"}</p>
       </body>
       </html>
-    `);
-    newWindow.document.close();
+    `;
+
+    const blob = new Blob([pageContent], { type: "text/html" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = `${patientData.name}.html`;
+    link.click();
   });
-
-  // Atualizar biblioteca de pacientes
-  const updatePatientLibrary = async () => {
-    const patients = await getAllPatientsFromFirestore();
-    const libraryDiv = document.getElementById("patientLinks");
-
-    libraryDiv.innerHTML = "";
-    patients.forEach((patient) => {
-      const patientDiv = document.createElement("div");
-      patientDiv.className = "patient-item";
-      patientDiv.innerHTML = `
-        <span>${patient.name}</span>
-        <span>${new Date(patient.date).toLocaleDateString("pt-BR")}</span>
-      `;
-      libraryDiv.appendChild(patientDiv);
-    });
-  };
-
-  document.addEventListener("DOMContentLoaded", updatePatientLibrary);
 </script>
+</body>
+</html>
