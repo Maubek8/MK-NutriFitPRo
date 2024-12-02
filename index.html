@@ -188,15 +188,25 @@
 </script>
 <script type="module">
   document.getElementById("createPatientPageBtn").addEventListener("click", async () => {
-    const patientName = document.getElementById("patient-name").value.trim();
-    const docSnap = await getDoc(doc(db, "patients", patientName));
+  const patientName = document.getElementById("patient-name").value.trim();
+
+  if (!patientName) {
+    alert("Por favor, insira o nome do paciente para criar a página!");
+    return;
+  }
+
+  try {
+    const docRef = doc(db, "patients", patientName);
+    const docSnap = await getDoc(docRef);
 
     if (!docSnap.exists()) {
-      alert("Paciente não encontrado!");
+      alert(`Paciente "${patientName}" não encontrado no Firestore.`);
       return;
     }
 
     const patientData = docSnap.data();
+
+    // Conteúdo da página do paciente
     const pageContent = `
       <!DOCTYPE html>
       <html lang="pt-BR">
@@ -206,6 +216,33 @@
         <style>
           body { font-family: Arial; margin: 20px; background: #f5f6fa; }
           h1 { color: #000080; }
+        </style>
+      </head>
+      <body>
+        <h1>${patientData.name}</h1>
+        <p>Data: ${patientData.date}</p>
+        <p>Refeições: ${patientData.refeicoes || "Não especificado"}</p>
+        <p>Alternativas: ${patientData.alternativas || "Não especificado"}</p>
+        <p>Metabolismo: ${patientData.metabolismo || "Não especificado"}</p>
+        <p>Exercícios: ${patientData.exercicios || "Não especificado"}</p>
+      </body>
+      </html>
+    `;
+
+    // Gera e baixa o arquivo .html
+    const blob = new Blob([pageContent], { type: "text/html" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = `${patientData.name}.html`;
+    link.click();
+
+    alert("Página criada com sucesso!");
+  } catch (error) {
+    console.error("Erro ao criar a página do paciente:", error);
+    alert("Ocorreu um erro ao criar a página. Tente novamente.");
+  }
+});
+
         </style>
       </head>
       <body>
