@@ -1,50 +1,30 @@
-// Inicializar Layout Dinâmico
+document.addEventListener('DOMContentLoaded', () => {
+  initializeLayout();
+  initializeAccordion();
+});
+
 function initializeLayout() {
-  const accordionContainer = document.getElementById('accordion-container');
+  const nutriFitSection = document.getElementById('nutriFitSection');
 
   const days = ['Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado', 'Domingo'];
   days.forEach(day => {
-    accordionContainer.innerHTML += `
+    nutriFitSection.innerHTML += `
       <div class="accordion">
         <button class="accordion-button">${day}</button>
         <div class="accordion-content">
-          <textarea class="meal-textarea" data-day="${day.toLowerCase()}"></textarea>
+          <textarea class="meal-textarea" data-day="${day.toLowerCase()}" placeholder="Insira refeições para ${day}..."></textarea>
         </div>
       </div>
     `;
   });
-
-  accordionContainer.innerHTML += `
-    <div class="accordion">
-      <button class="accordion-button">Alternativas</button>
-      <div class="accordion-content">
-        <textarea class="meal-textarea" data-section="alternativas"></textarea>
-      </div>
-    </div>
-    <div class="accordion">
-      <button class="accordion-button">Metabolismo</button>
-      <div class="accordion-content">
-        <textarea class="meal-textarea" data-section="metabolismo"></textarea>
-      </div>
-    </div>
-    <div class="accordion">
-      <button class="accordion-button">Exercícios</button>
-      <div class="accordion-content">
-        <textarea class="meal-textarea" data-section="exercicios"></textarea>
-      </div>
-    </div>
-  `;
-  initializeAccordion();
 }
 
-// Tornar os botões dinâmicos (comportamento acordeão)
 function initializeAccordion() {
-  const accordionButtons = document.querySelectorAll('.accordion-button');
-  accordionButtons.forEach(button => {
-    button.addEventListener('click', function () {
-      const content = this.nextElementSibling;
+  document.querySelectorAll('.accordion-button').forEach(button => {
+    button.addEventListener('click', () => {
+      const content = button.nextElementSibling;
 
-      // Fechar todos os outros acordeões abertos
+      // Fechar outros acordeões abertos
       document.querySelectorAll('.accordion-content').forEach(c => {
         if (c !== content) {
           c.style.display = 'none';
@@ -53,17 +33,13 @@ function initializeAccordion() {
       });
 
       // Alternar o estado do acordeão clicado
-      const isActive = this.classList.toggle('active');
+      const isActive = button.classList.toggle('active');
       content.style.display = isActive ? 'block' : 'none';
     });
   });
 }
 
-// Inicializar as seções dinâmicas ao carregar a página
-document.addEventListener('DOMContentLoaded', initializeLayout);
-
-// Criar página do paciente
-document.getElementById('createPatientPageBtn').addEventListener('click', function () {
+document.getElementById('createPatientPageBtn').addEventListener('click', () => {
   const patientName = document.getElementById('patient-name').value.trim();
   const patientDate = document.getElementById('patient-date').value;
 
@@ -108,8 +84,7 @@ document.getElementById('createPatientPageBtn').addEventListener('click', functi
   newWindow.document.close();
 });
 
-// Baixar página do paciente
-document.getElementById('downloadPatientPageBtn').addEventListener('click', function () {
+document.getElementById('downloadPatientPageBtn').addEventListener('click', () => {
   const patientName = document.getElementById('patient-name').value.trim();
 
   if (!patientName) {
@@ -119,11 +94,12 @@ document.getElementById('downloadPatientPageBtn').addEventListener('click', func
 
   const blob = new Blob([document.documentElement.outerHTML], { type: 'text/html' });
   const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
+    const a = document.createElement('a');
   a.href = url;
-  a.download = `${patientName}.html`;
+  a.download = `${patientName}_PlanoNutricional.html`;
   document.body.appendChild(a);
   a.click();
   URL.revokeObjectURL(url);
   document.body.removeChild(a);
 });
+
