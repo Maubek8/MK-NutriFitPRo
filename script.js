@@ -1,5 +1,4 @@
-let patientData = JSON.parse(localStorage.getItem('patientData')) || {};
-
+// Inicializar Layout Dinâmico
 function initializeLayout() {
   const accordionContainer = document.getElementById('accordion-container');
 
@@ -35,8 +34,35 @@ function initializeLayout() {
       </div>
     </div>
   `;
+  initializeAccordion();
 }
 
+// Tornar os botões dinâmicos (comportamento acordeão)
+function initializeAccordion() {
+  const accordionButtons = document.querySelectorAll('.accordion-button');
+  accordionButtons.forEach(button => {
+    button.addEventListener('click', function () {
+      const content = this.nextElementSibling;
+
+      // Fechar todos os outros acordeões abertos
+      document.querySelectorAll('.accordion-content').forEach(c => {
+        if (c !== content) {
+          c.style.display = 'none';
+          c.previousElementSibling.classList.remove('active');
+        }
+      });
+
+      // Alternar o estado do acordeão clicado
+      const isActive = this.classList.toggle('active');
+      content.style.display = isActive ? 'block' : 'none';
+    });
+  });
+}
+
+// Inicializar as seções dinâmicas ao carregar a página
+document.addEventListener('DOMContentLoaded', initializeLayout);
+
+// Criar página do paciente
 document.getElementById('createPatientPageBtn').addEventListener('click', function () {
   const patientName = document.getElementById('patient-name').value.trim();
   const patientDate = document.getElementById('patient-date').value;
@@ -82,6 +108,7 @@ document.getElementById('createPatientPageBtn').addEventListener('click', functi
   newWindow.document.close();
 });
 
+// Baixar página do paciente
 document.getElementById('downloadPatientPageBtn').addEventListener('click', function () {
   const patientName = document.getElementById('patient-name').value.trim();
 
@@ -100,5 +127,3 @@ document.getElementById('downloadPatientPageBtn').addEventListener('click', func
   URL.revokeObjectURL(url);
   document.body.removeChild(a);
 });
-
-document.addEventListener('DOMContentLoaded', initializeLayout);
