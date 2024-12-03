@@ -465,9 +465,10 @@
       </div>
     </div>
 
-    <button id="createPatientPageBtn" class="save-btn" style="margin-top: 20px; background-color: var(--primary-color); width: 100%;">
-      Criar Página do Paciente
-    </button>
+    <button id="downloadPatientPageBtn" class="save-btn" style="margin-top: 20px; background-color: var(--primary-color); width: 100%;">
+  Baixar Página do Paciente
+</button>
+
 
     <div class="accordion">
       <button class="accordion-button">
@@ -1083,5 +1084,52 @@
       initializeEditors();
       updatePatientLibrary();
     });
+    document.getElementById('downloadPatientPageBtn').addEventListener('click', function() {
+  const patientName = document.getElementById('patient-name').value.trim();
+
+  if (!patientName) {
+    alert('Por favor, insira o nome do paciente primeiro!');
+    return;
+  }
+
+  if (!patientData[patientName]) {
+    alert('Por favor, salve algum dado do paciente primeiro!');
+    return;
+  }
+
+  const data = patientData[patientName];
+  const patientPageHTML = `
+    <!DOCTYPE html>
+    <html lang="pt-BR">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>${patientName} - Plano Nutricional</title>
+      <style>${document.querySelector('style').innerText}</style>
+    </head>
+    <body>${document.querySelector('.header').outerHTML}
+      <div class="container">
+        <!-- Conteúdo gerado do paciente -->
+        ${Object.keys(data.meals).map(day => `
+          <div>
+            <h3>${day}</h3>
+            <p>${data.meals[day]}</p>
+          </div>`).join('')}
+      </div>
+    </body>
+    </html>
+  `;
+
+  const blob = new Blob([patientPageHTML], { type: 'text/html' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${patientName}_plano_nutricional.html`;
+  document.body.appendChild(a);
+  a.click();
+  URL.revokeObjectURL(url);
+  document.body.removeChild(a);
+});
+
   </script>
 </body></html>
