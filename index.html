@@ -1,68 +1,27 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MK-CARDIOSPORT Nutri Fit</title>
-  <link rel="stylesheet" href="style.css">
-  <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulário</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header class="header">
-    <img src="logo.png" alt="CardioSport Logo" class="header-logo">
-    <div class="header-content">
-      <h1>MK-CARDIOSPORT</h1>
-      <h2>NutriFit</h2>
-      <p>Siga o seu objetivo!</p>
+    <div class="container">
+        <h1>Preencha as informações</h1>
+        <form id="form">
+            <label for="nome">Nome:</label>
+            <input type="text" id="nome" name="nome" required><br>
+            
+            <label for="data">Data:</label>
+            <input type="date" id="data" name="data" required><br>
+            
+            <label for="descricao">Descrição:</label>
+            <textarea id="descricao" name="descricao"></textarea><br>
+            
+            <button type="button" id="entrar">Entrar</button>
+        </form>
     </div>
-  </header>
-
-  <div class="container">
-    <div class="form-group">
-      <label for="patient-name">Nome do Paciente:</label>
-      <input type="text" id="patient-name" placeholder="Digite o nome do paciente">
-      <label for="patient-date">Data:</label>
-      <input type="date" id="patient-date">
-    </div>
-
-    <div id="accordion-container">
-      <!-- Seções dinâmicas (como refeições e exercícios) serão adicionadas aqui pelo JavaScript -->
-    </div>
-
-    <button id="createPatientPageBtn" class="save-btn">
-      Criar Página do Paciente
-    </button>
-    <button id="downloadPatientPageBtn" class="save-btn">
-      Baixar Página do Paciente
-    </button>
-
-    <div id="patientLibrary" class="accordion">
-      <button class="accordion-button">Biblioteca de Pacientes</button>
-      <div class="accordion-content">
-        <div class="filter-container">
-          <label for="month-filter">Filtrar por mês:</label>
-          <select id="month-filter">
-            <option value="">Todos</option>
-            <option value="01">Janeiro</option>
-            <option value="02">Fevereiro</option>
-            <option value="03">Março</option>
-            <option value="04">Abril</option>
-            <option value="05">Maio</option>
-            <option value="06">Junho</option>
-            <option value="07">Julho</option>
-            <option value="08">Agosto</option>
-            <option value="09">Setembro</option>
-            <option value="10">Outubro</option>
-            <option value="11">Novembro</option>
-            <option value="12">Dezembro</option>
-          </select>
-        </div>
-        <div id="patientLinks" class="patient-list"></div>
-      </div>
-    </div>
-  </div>
-
-  <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
-  <script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
